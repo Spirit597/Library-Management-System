@@ -271,6 +271,38 @@ void MainWidget::readDataAndRespond()
                 QByteArray byte_array = QJsonDocument(booksPackage).toJson();
                 theClient->write(byte_array);
             }
+            //待修改，怎么传入shelfnumber?询问包里装入即可
+            //已修改
+            else if(clientMessage.value("type").toString() == "get books by shelfnumber")
+            {
+                QString sqlSentence = "select * from Book where bookShelf = ";
+                sqlSentence = sqlSentence+clientMessage.value("shelfnumber").toInt();
+                if(!query.exec(sqlSentence))
+                {
+                    qDebug()<<query.lastError()<< endl;
+                }
+                QJsonObject booksPackage;
+                int number = 0;
+                while(query.next())
+                {
+                    number ++;
+                    QJsonObject bookPackage;
+                    bookPackage.insert("ISBN", query.value("ISBN").toString());
+                    bookPackage.insert("name", query.value("name").toString());
+                    bookPackage.insert("writer", query.value("writer").toString());
+                    bookPackage.insert("type", query.value("type").toString());
+                    bookPackage.insert("press", query.value("press").toString());
+                    bookPackage.insert("publicationDate", query.value("publicationDate").toString());
+                    bookPackage.insert("price", query.value("price").toFloat());
+
+
+                    booksPackage.insert("book" + QString::number(number), bookPackage);
+
+                }
+                QByteArray byte_array = QJsonDocument(booksPackage).toJson();
+                theClient->write(byte_array);
+            }
+
             else if(clientMessage.value("type").toString() == "borrow")
             {
                 QString sqlSentence = "select * from BorrowedBook";

@@ -22,20 +22,21 @@ public:
     void setFund(float fund);
     void getLibraryInfo(QTcpSocket *tcpClient);
     void returnMainWindow();
-    void getShelfInfo(QTcpSocket *tcpClient);
-    void creteShelfDetailWin(int ShelfNumber,QTcpSocket *tcpSocket);
+    void getShelfInfo();
+    void creteShelfDetailWin(int ShelfNumber);
     void enterShelfDetail();//进入书架信息的处理函数
     void backToShelfList();//返回书架列表的处理函数
-
+    QTcpSocket *tcpClient;
 private:
     QLabel *fund;
     QPushButton closeShelfWidget;
-
     BookShelfDetailWidget *shelfDetailWidget;
     QWidget *shelfListWidget;
     QScrollArea *ScrollArea;
     QVector <BookShelf *> shelfLists;
     QVector <ShelfButton *> shelfButtonLists;
+
+
 
 
 signals:

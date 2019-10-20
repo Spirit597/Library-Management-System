@@ -4,6 +4,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 {
     this->setWindowTitle("图书馆信息管理系统");
 
+
     topBar = new QFrame;
     topBar->setParent(this);
     topBar->setFixedSize(780, 20);
@@ -303,8 +304,10 @@ void MainWindow::createViewLibraryInfoWin()
         return;
     }
     LibraryInfoWindow *libraryInfoWin = new LibraryInfoWindow;
+    //继承主界面的tcpClient,这样比较简便
+    libraryInfoWin->tcpClient = tcpClient;
     libraryInfoWin->getLibraryInfo(tcpClient);
-    libraryInfoWin->getShelfInfo(tcpClient);
+    libraryInfoWin->getShelfInfo();
     libraryInfoWin->show();
 
 }

@@ -37,9 +37,10 @@ void LibraryInfoWindow::returnMainWindow()
     emit returnSignal();
 }
 
-void LibraryInfoWindow::creteShelfDetailWin(int ShelfNumber,QTcpSocket *tcpSocket)
+void LibraryInfoWindow::creteShelfDetailWin(int ShelfNumber)
 {
-    shelfDetailWidget->getBooksInfo(ShelfNumber,tcpSocket);
+    shelfDetailWidget->tcpClient = this->tcpClient;
+    shelfDetailWidget->getBooksInfo(ShelfNumber);
 
 }
 
@@ -88,7 +89,7 @@ void LibraryInfoWindow::getLibraryInfo(QTcpSocket *tcpClient)
 }
 
 
-void LibraryInfoWindow::getShelfInfo(QTcpSocket *tcpClient)
+void LibraryInfoWindow::getShelfInfo()
 {
 
     for(int i = 0; i<shelfButtonLists.count();i++ )
@@ -104,6 +105,7 @@ void LibraryInfoWindow::getShelfInfo(QTcpSocket *tcpClient)
     QJsonObject getShelfsInfoPackage;
     getShelfsInfoPackage.insert("type","get shelfs information");
 
+    tcpClient = this->tcpClient;
     QByteArray byte_array = QJsonDocument(getShelfsInfoPackage).toJson();
     tcpClient->write(byte_array);
     if(tcpClient->waitForReadyRead(1000))//阻塞式连接

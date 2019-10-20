@@ -36,49 +36,69 @@ void BookShelfDetailWidget::dealBackSignal()
 }
 
 
-
-void BookShelfDetailWidget::getBooksInfo(int ShelfNumber, QTcpSocket *tcpSocket)
+//根据书架号搜索书架上的所有书籍
+//这样传参可以，但是每次都要传这个tcpClient很麻烦
+//是不是可以直接用widget声明时传到子类部件里？
+void BookShelfDetailWidget::getBooksInfo(int byShelfNumber)
 {
-////    BookShelfDetailWidget *shelfDetailWidget = new BookShelfDetailWidget();
-////    connect(shelfDetailWidget, &BookShelfDetailWidget::shelfNumber);
-////    connect 留待按钮绑定
-////    connect
-//    for(int i = 0; i<bookButtonLists.count();i++)
-//    {
-//        if(bookButtonLists[i])
-//        {
-//            delete bookButtonLists[i];
-//        }
+//    BookShelfDetailWidget *shelfDetailWidget = new BookShelfDetailWidget();
+//    connect(shelfDetailWidget, &BookShelfDetailWidget::shelfNumber);
+//    connect 留待按钮绑定
 
-//    }
-//    bookButtonLists.clear();
-//    bookLists.clear();
-//    bookListWidget->resize(bookListWidget->width(),0);
+    for(int i = 0; i<bookButtonLists.count();i++)
+    {
+        if(bookButtonLists[i])
+        {
+            delete bookButtonLists[i];
+        }
 
-//    QJsonObject getBooksInfoPackage;
-//    getBooksInfoPackage.insert("type", "get books");
+    }
+    bookButtonLists.clear();
+    bookLists.clear();
+    bookListWidget->resize(bookListWidget->width(),0);
 
-//    QByteArray byte_array = QJsonDocument(getBooksInfoPackage).toJson();
-//    tcpClient->write(byte_array);
+    QJsonObject getBooksInfoPackage;
+    getBooksInfoPackage.insert("type", "get books by shelfnumber");
+    getBooksInfoPackage.insert("shelfnumber",byShelfNumber);
 
+    tcpClient = this->tcpClient;
+    QByteArray byte_array = QJsonDocument(getBooksInfoPackage).toJson();
+    tcpClient->write(byte_array);
+    if(tcpClient->waitForReadyRead(1000))//阻塞式连接
+    {
+        QByteArray result = tcpClient->readAll();
+        if(!result.isEmpty())
+        {
+            QJsonObject resultInfo = QJsonDocument::fromJson(result).object();
 
-//    for(int i = 1; i < 10; i++)
-//    {
-//        BookButton *oneBookButton = new BookButton(bookListWidget);
-//        oneBookButton->show();
-//        bookButtonLists.append(oneBookButton);
+            for(int i=1; i<=resultInfo.count(); i++)
+            {
+                QJsonObject temp = resultInfo.value("book" + QString::number(i)).toObject();
+                BookButton *oneBookButton = new BookButton(bookListWidget);
+                oneBookButton->show();
+                bookButtonLists.append(oneBookButton);
+                //这里的书籍按钮就不点开了，仅供浏览？
+//                connect(oneBookButton, &BookButton::clicked, oneBookButton, &BookButton::sendSignal);
+//                connect(oneBookButton, &BookButton::ISBNsignal, this, &MainWindow::createBookDetailWin);
 
-//        oneBookButton->setText("ISBN：\n书名：\n作者：\n类别：\n出版社：" );
-////        留待数据库文件参与后使用
-////        oneBookButton->setText("ISBN：" + + "\n书名：" + name + "\n作者：" + writer + "\n类别：" + type + "\n出版社：" + press);
-//        oneBookButton->move(0, (i-1) * oneBookButton->height());
-//        bookListWidget->resize(bookListWidget->width(), bookListWidget->height() + oneBookButton->height());
+                QString ISBN = temp.value("ISBN").toString();
+                QString name = temp.value("name").toString();
+                QString writer = temp.value("writer").toString();
+                QString type = temp.value("type").toString();
+                QString press = temp.value("press").toString();
+                QString publicationDate = temp.value("publicationDate").toString();
+                float price = temp.value("price").toDouble();
 
-////        留待数据库文件参与后使用
-////        Book *oneBook = new Book(ISBN, name, writer, type, press, publicationDate, price);
-//        Book *oneBook = new Book("ISBN"," name", "writer", "type", "press", "publicationDate", 1.1);
-//        bookLists.append(oneBook);
-//    }
+                oneBookButton->setISBN(ISBN);
+                oneBookButton->setText("ISBN：" + ISBN + "\n书名：" + name + "\n作者：" + writer + "\n类别：" + type + "\n出版社：" + press);
+                oneBookButton->move(0, (i-1) * oneBookButton->height());
+                bookListWidget->resize(bookListWidget->width(), bookListWidget->height() + oneBookButton->height());
 
-//    this->bookListWidget->show();
+                Book *oneBook = new Book(ISBN, name, writer, type, press, publicationDate, price);
+                bookLists.append(oneBook);
+            }
+            this->bookListWidget->show();
+        }
+
+    }
 }
