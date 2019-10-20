@@ -2,7 +2,7 @@
 #include "QStyleFactory"
 LibraryInfoWindow::LibraryInfoWindow(QWidget *parent) : QWidget(parent)
 {
-    this->resize(500, 600);
+    this->resize(500, 620);
     this->setWindowTitle("图书馆信息");
 
     fund = new QLabel(this);
@@ -20,14 +20,14 @@ LibraryInfoWindow::LibraryInfoWindow(QWidget *parent) : QWidget(parent)
 
     //滑动区域显示书架信息
     shelfListWidget = new QWidget(this);
-    shelfListWidget->resize(500,1000);
+    shelfListWidget->resize(500,0);
     shelfListWidget->setMaximumWidth(500);
     shelfListWidget->setStyle(QStyleFactory::create("fusion"));
     shelfListWidget->show();
 
     ScrollArea = new QScrollArea(this);
     ScrollArea->setWidget(shelfListWidget);
-    ScrollArea->setFixedSize(500,400);
+    ScrollArea->setFixedSize(500,300);
     ScrollArea->move(1,200);
 
 }
@@ -145,10 +145,10 @@ void LibraryInfoWindow::getShelfInfo()
                 singleShelfButton->setShelfNumber(ShelfNumber);
                 QString strshelfnumber = QString::number(ShelfNumber);
                 QString strshelfcapacity = QString::number(ShelfCapacity);
-                singleShelfButton->setText("书架号："+strshelfnumber+"\n存放书类："+ShelfType+"容量："+strshelfcapacity);
+                singleShelfButton->setText("书架号："+strshelfnumber+"\n存放书类："+ShelfType+"\n容量："+strshelfcapacity);
                 int row = (((i-1) / 3) + 1);
                 int column = ((i - 1) % 3) + 1;
-                singleShelfButton->move((column-1)*(singleShelfButton->width()+20),(row-1) * singleShelfButton->height());
+                singleShelfButton->move((column-1)*(singleShelfButton->width()+20),(row-1) * (singleShelfButton->height()+20));
                 if (i%3 == 1)
                 {
                     shelfListWidget->resize(shelfListWidget->width(),shelfListWidget->height()+singleShelfButton->height());
@@ -157,8 +157,9 @@ void LibraryInfoWindow::getShelfInfo()
                 BookShelf *singleShelf = new BookShelf(ShelfNumber,ShelfType,ShelfCapacity);
                 shelfLists.append(singleShelf);
             }
-            this->shelfListWidget->show();
+
         }
+        this->shelfListWidget->show();
     }
 
 
