@@ -125,7 +125,7 @@ void LibraryInfoWindow::getShelfInfo(QTcpSocket *tcpClient)
                  * 书架列表窗口接收信号，创建该书架的详细信息窗口
                  */
                 connect(singleShelfButton, &ShelfButton::clicked, singleShelfButton, &ShelfButton::sendCreatNewWin);
-                connect(singleShelfButton, &ShelfButton::ShelfNumbersignal, shelfDetailWidget,&BookShelfDetailWidget::creteShelfDetailWin);
+                connect(singleShelfButton, &ShelfButton::ShelfNumbersignal, this,&LibraryInfoWindow::creteShelfDetailWin);
                 connect(singleShelfButton, &ShelfButton::clicked, this, &LibraryInfoWindow::enterShelfDetail);
 
                 int ShelfNumber = temp.value("ShelfNumber").toInt();

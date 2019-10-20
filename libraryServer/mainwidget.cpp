@@ -572,6 +572,7 @@ void MainWidget::readDataAndRespond()
                 QByteArray byte_array = QJsonDocument(shelfsPackage).toJson();
                 theClient->write(byte_array);
             }
+
             else if(clientMessage.value("type").toString() == "get user information")
             {
                 if(clientMessage.value("role") == "admin")

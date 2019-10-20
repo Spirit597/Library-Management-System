@@ -15,4 +15,5 @@ HEADERS += \
     administrator.h \
     borrowedbook.h \
     administrator.h \
-    mainwidget.h
+    mainwidget.h \
+    administrator.h
