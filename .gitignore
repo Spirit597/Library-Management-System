@@ -1,0 +1,7 @@
+
+*.o
+*.stash
+*.Debug
+*.Release
+build-libraryServer-Desktop_Qt_5_8_0_MinGW_32bit-Debug/
+build-library-Desktop_Qt_5_8_0_MinGW_32bit-Debug/
