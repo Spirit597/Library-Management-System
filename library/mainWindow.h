@@ -43,6 +43,8 @@ public:
 
     void getBooksInfo();
 
+    void getTcpClient();
+
     float getBookPrice(BookButton *bookButton);
     QString getBookProperty(BookButton *bookButton, QString propertyName);
 

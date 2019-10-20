@@ -10,14 +10,14 @@ class ShelfButton : public QPushButton
 public:
     ShelfButton(QWidget *parent = 0);
 
-    void setShelfNumber(int ShelfNumber,QTcpSocket *tcpSocket);
+    void setShelfNumber(int ShelfNumber);
     void sendCreatNewWin();
 private:
     int ShelfNumber;
-    QTcpSocket *tcpSocket;
+
 
 signals:
-    void ShelfNumbersignal(int ShelfNumber, QTcpSocket *tcpSocket);
+    void ShelfNumbersignal(int ShelfNumber);
 };
 
 #endif // BOOKSHELFBUTTON_H

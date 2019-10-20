@@ -37,9 +37,16 @@ void LibraryInfoWindow::returnMainWindow()
     emit returnSignal();
 }
 
+void LibraryInfoWindow::setTcpClient(QTcpSocket *tcpClient)
+{
+    this->tcpClient = tcpClient;
+}
+
 void LibraryInfoWindow::creteShelfDetailWin(int ShelfNumber)
 {
-    shelfDetailWidget->tcpClient = this->tcpClient;
+    BookShelfDetailWidget *shelfDetailWidget = new BookShelfDetailWidget;
+    shelfDetailWidget->setTcpClient(this->tcpClient);
+    shelfDetailWidget->setWindowTitle(QString::number(ShelfNumber)+"号书架");
     shelfDetailWidget->getBooksInfo(ShelfNumber);
 
 }
@@ -47,17 +54,18 @@ void LibraryInfoWindow::creteShelfDetailWin(int ShelfNumber)
 
 //上下级窗口切换信号，进入书架详细信息的子菜单，
 //其实是我实现方式略显繁琐了，有空再优化
-void LibraryInfoWindow::enterShelfDetail()
-{
-    this->hide();
-    shelfDetailWidget->show();
-}
+//不过其实也有关系，点开详细信息还能返回书架列表
+//void LibraryInfoWindow::enterShelfDetail()
+//{
+//    this->hide();
+//    shelfDetailWidget->show();
+//}
 
-void LibraryInfoWindow::backToShelfList()
-{
-    this->show();
-    shelfDetailWidget->hide();
-}
+//void LibraryInfoWindow::backToShelfList()
+//{
+//    this->show();
+//    shelfDetailWidget->hide();
+//}
 
 void LibraryInfoWindow::setFund(float fund)
 {
@@ -128,13 +136,13 @@ void LibraryInfoWindow::getShelfInfo()
                  */
                 connect(singleShelfButton, &ShelfButton::clicked, singleShelfButton, &ShelfButton::sendCreatNewWin);
                 connect(singleShelfButton, &ShelfButton::ShelfNumbersignal, this,&LibraryInfoWindow::creteShelfDetailWin);
-                connect(singleShelfButton, &ShelfButton::clicked, this, &LibraryInfoWindow::enterShelfDetail);
+//                connect(singleShelfButton, &ShelfButton::clicked, this, &LibraryInfoWindow::enterShelfDetail);
 
                 int ShelfNumber = temp.value("ShelfNumber").toInt();
                 QString ShelfType = temp.value("ShelfType").toString();
                 int ShelfCapacity = temp.value("ShelfCapacity").toInt();
 
-                singleShelfButton->setShelfNumber(ShelfNumber,tcpClient);
+                singleShelfButton->setShelfNumber(ShelfNumber);
                 QString strshelfnumber = QString::number(ShelfNumber);
                 QString strshelfcapacity = QString::number(ShelfCapacity);
                 singleShelfButton->setText("书架号："+strshelfnumber+"\n存放书类："+ShelfType+"容量："+strshelfcapacity);

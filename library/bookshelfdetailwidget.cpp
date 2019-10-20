@@ -3,16 +3,19 @@
 BookShelfDetailWidget::BookShelfDetailWidget(QWidget *parent) : QWidget(parent)
 {
 
-    this->setWindowTitle("书架详细信息");
+//    this->setWindowTitle("书架详细信息");
     this->resize(800,600);
 
-    closeShelfDetail.setParent(this);
-    closeShelfDetail.setText("返回书架列表");
-    closeShelfDetail.resize(100,50);
-    closeShelfDetail.move(650,500);
-    closeShelfDetail.show();
-    //返回书架列表窗口，给书架列表窗口发送一个信号
-    connect(&closeShelfDetail, &QPushButton::clicked, this, &BookShelfDetailWidget::dealBackSignal);
+
+    //既然已经不在书架列表窗口的类中声明了，也就没必要再设置这个按钮了
+    //即使这个窗口关闭，书架列表也依旧在
+//    closeShelfDetail.setParent(this);
+//    closeShelfDetail.setText("返回书架列表");
+//    closeShelfDetail.resize(100,50);
+//    closeShelfDetail.move(650,500);
+//    closeShelfDetail.show();
+//    //返回书架列表窗口，给书架列表窗口发送一个信号
+//    connect(&closeShelfDetail, &QPushButton::clicked, this, &BookShelfDetailWidget::dealBackSignal);
 
 
     bookListWidget = new QWidget;
@@ -35,6 +38,10 @@ void BookShelfDetailWidget::dealBackSignal()
     emit goBackSignal();
 }
 
+void BookShelfDetailWidget::setTcpClient(QTcpSocket *tcpClient)
+{
+    this->tcpClient = tcpClient;
+}
 
 //根据书架号搜索书架上的所有书籍
 //这样传参可以，但是每次都要传这个tcpClient很麻烦
@@ -59,9 +66,8 @@ void BookShelfDetailWidget::getBooksInfo(int byShelfNumber)
 
     QJsonObject getBooksInfoPackage;
     getBooksInfoPackage.insert("type", "get books by shelfnumber");
-    getBooksInfoPackage.insert("shelfnumber",byShelfNumber);
+    getBooksInfoPackage.insert("shelfnumber",QString::number(byShelfNumber,10));
 
-    tcpClient = this->tcpClient;
     QByteArray byte_array = QJsonDocument(getBooksInfoPackage).toJson();
     tcpClient->write(byte_array);
     if(tcpClient->waitForReadyRead(1000))//阻塞式连接
@@ -98,6 +104,7 @@ void BookShelfDetailWidget::getBooksInfo(int byShelfNumber)
                 bookLists.append(oneBook);
             }
             this->bookListWidget->show();
+            this->show();
         }
 
     }

@@ -271,12 +271,12 @@ void MainWidget::readDataAndRespond()
                 QByteArray byte_array = QJsonDocument(booksPackage).toJson();
                 theClient->write(byte_array);
             }
-            //待修改，怎么传入shelfnumber?询问包里装入即可
-            //已修改
+            //怎么传入shelfnumber?询问包里装入即可已修改
             else if(clientMessage.value("type").toString() == "get books by shelfnumber")
             {
+                qDebug()<<clientMessage.value("shelfnumber").toInt();
                 QString sqlSentence = "select * from Book where bookShelf = ";
-                sqlSentence = sqlSentence+clientMessage.value("shelfnumber").toInt();
+                sqlSentence = sqlSentence+clientMessage.value("shelfnumber").toString();
                 if(!query.exec(sqlSentence))
                 {
                     qDebug()<<query.lastError()<< endl;
@@ -593,7 +593,6 @@ void MainWidget::readDataAndRespond()
                 {
                     number++;
                     QJsonObject shelfPackage;
-                    qDebug()<<query.value("ShelfNumber").toString();
                     shelfPackage.insert("ShelfNumber",query.value("ShelfNumber").toInt());
                     shelfPackage.insert("ShelfType",query.value("ShelfType").toString());
                     shelfPackage.insert("ShelfCapacity",query.value("ShelfCapacity").toInt());

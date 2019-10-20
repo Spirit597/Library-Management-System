@@ -11,11 +11,11 @@ ShelfButton::ShelfButton(QWidget *parent):QPushButton(parent)
 
 void ShelfButton::sendCreatNewWin()
 {
-    emit ShelfNumbersignal(this->ShelfNumber,this->tcpSocket);
+    emit ShelfNumbersignal(this->ShelfNumber);
 }
 
-void ShelfButton::setShelfNumber(int ShelfNumber, QTcpSocket *tcpSocket)
+void ShelfButton::setShelfNumber(int ShelfNumber)
 {
     this->ShelfNumber = ShelfNumber;
-    this->tcpSocket = tcpSocket;
+
 }

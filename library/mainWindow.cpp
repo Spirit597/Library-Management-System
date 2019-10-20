@@ -304,9 +304,9 @@ void MainWindow::createViewLibraryInfoWin()
         return;
     }
     LibraryInfoWindow *libraryInfoWin = new LibraryInfoWindow;
-    //继承主界面的tcpClient,这样比较简便
-    libraryInfoWin->tcpClient = tcpClient;
     libraryInfoWin->getLibraryInfo(tcpClient);
+    //继承主界面的tcpClient,这样比较简便,但是这样不规范也不安全
+    libraryInfoWin->setTcpClient(this->tcpClient);
     libraryInfoWin->getShelfInfo();
     libraryInfoWin->show();
 
