@@ -2,7 +2,7 @@
 #include "QStyleFactory"
 LibraryInfoWindow::LibraryInfoWindow(QWidget *parent) : QWidget(parent)
 {
-    this->resize(500, 620);
+    this->resize(520, 600);
     this->setWindowTitle("图书馆信息");
 
     fund = new QLabel(this);
@@ -18,16 +18,16 @@ LibraryInfoWindow::LibraryInfoWindow(QWidget *parent) : QWidget(parent)
 //    connect(&shelfDetailWidget, &BookShelfDetailWidget::goBackSignal, this, &LibraryInfoWindow::backToShelfList);
 
 
-    //滑动区域显示书架信息
+    //滑动区域显示书架网格信息
     shelfListWidget = new QWidget(this);
-    shelfListWidget->resize(500,0);
+    shelfListWidget->resize(520,300);
     shelfListWidget->setMaximumWidth(500);
     shelfListWidget->setStyle(QStyleFactory::create("fusion"));
     shelfListWidget->show();
 
     ScrollArea = new QScrollArea(this);
     ScrollArea->setWidget(shelfListWidget);
-    ScrollArea->setFixedSize(500,300);
+    ScrollArea->setFixedSize(520,300);
     ScrollArea->move(1,200);
 
 }
@@ -136,7 +136,6 @@ void LibraryInfoWindow::getShelfInfo()
                  */
                 connect(singleShelfButton, &ShelfButton::clicked, singleShelfButton, &ShelfButton::sendCreatNewWin);
                 connect(singleShelfButton, &ShelfButton::ShelfNumbersignal, this,&LibraryInfoWindow::creteShelfDetailWin);
-//                connect(singleShelfButton, &ShelfButton::clicked, this, &LibraryInfoWindow::enterShelfDetail);
 
                 int ShelfNumber = temp.value("ShelfNumber").toInt();
                 QString ShelfType = temp.value("ShelfType").toString();
@@ -151,7 +150,7 @@ void LibraryInfoWindow::getShelfInfo()
                 singleShelfButton->move((column-1)*(singleShelfButton->width()+20),(row-1) * (singleShelfButton->height()+20));
                 if (i%3 == 1)
                 {
-                    shelfListWidget->resize(shelfListWidget->width(),shelfListWidget->height()+singleShelfButton->height());
+                    shelfListWidget->resize(shelfListWidget->width(),shelfListWidget->height()+row*(singleShelfButton->height()+20));
                 }
 
                 BookShelf *singleShelf = new BookShelf(ShelfNumber,ShelfType,ShelfCapacity);
