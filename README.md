@@ -89,7 +89,6 @@ A  simple Library-Management-System demo
     insert into BookShelf (ShelfType)VALUES('B')
   ```
     
-    
 
 - [ ] **BookShelfDetailWidget**:单个书架详情页上 ：**划分、删除**
 
