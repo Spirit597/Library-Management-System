@@ -94,13 +94,14 @@ void BookShelfDetailWidget::getBooksInfo(int byShelfNumber)
                 QString press = temp.value("press").toString();
                 QString publicationDate = temp.value("publicationDate").toString();
                 float price = temp.value("price").toDouble();
+                int bookShelf = temp.value("bookShelf").toInt();
 
                 oneBookButton->setISBN(ISBN);
                 oneBookButton->setText("ISBN：" + ISBN + "\n书名：" + name + "\n作者：" + writer + "\n类别：" + type + "\n出版社：" + press);
                 oneBookButton->move(0, (i-1) * oneBookButton->height());
                 bookListWidget->resize(bookListWidget->width(), bookListWidget->height() + oneBookButton->height());
 
-                Book *oneBook = new Book(ISBN, name, writer, type, press, publicationDate, price);
+                Book *oneBook = new Book(ISBN, name, writer, type, press, publicationDate, price, bookShelf);
                 bookLists.append(oneBook);
             }
             this->bookListWidget->show();

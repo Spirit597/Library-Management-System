@@ -342,10 +342,12 @@ void MainWindow::createBookDetailWin(QString ISBN)
             bookDetailWin->setPress(booksList[i]->getPress());
             bookDetailWin->setPublicationDate(booksList[i]->getPublicationDate());
             bookDetailWin->setPrice(booksList[i]->getPrice());
+            bookDetailWin->setBookShelf(booksList[i]->getShelfNumber());
+
             break;
         }
     }
-
+    bookDetailWin->showShelfList();
     bookDetailWin->show();
 
 }
@@ -423,6 +425,7 @@ void MainWindow::getBooksInfo()
                 connect(oneBookButton, &BookButton::clicked, oneBookButton, &BookButton::sendSignal);
                 connect(oneBookButton, &BookButton::ISBNsignal, this, &MainWindow::createBookDetailWin);
 
+
                 QString ISBN = temp.value("ISBN").toString();
                 QString name = temp.value("name").toString();
                 QString writer = temp.value("writer").toString();
@@ -430,13 +433,14 @@ void MainWindow::getBooksInfo()
                 QString press = temp.value("press").toString();
                 QString publicationDate = temp.value("publicationDate").toString();
                 float price = temp.value("price").toDouble();
+                int bookShelf = temp.value("bookShelf").toInt();
 
                 oneBookButton->setISBN(ISBN);
-                oneBookButton->setText("ISBN：" + ISBN + "\n书名：" + name + "\n作者：" + writer + "\n类别：" + type + "\n出版社：" + press);
+                oneBookButton->setText("ISBN：" + ISBN + "\n书名：" + name + "\n作者：" + writer + "\n类别：" + type + "\n出版社：" + press+'\n书架编号：'+bookShelf);
                 oneBookButton->move(0, (i-1) * oneBookButton->height());
                 booksListWidget->resize(booksListWidget->width(), booksListWidget->height() + oneBookButton->height());
 
-                Book *oneBook = new Book(ISBN, name, writer, type, press, publicationDate, price);
+                Book *oneBook = new Book(ISBN, name, writer, type, press, publicationDate, price, bookShelf);
                 booksList.append(oneBook);
             }
             this->booksListWidget->show();

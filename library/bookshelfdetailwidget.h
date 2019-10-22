@@ -8,9 +8,11 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QScrollArea>
+#include <QHeaderView>
 
 #include <book.h>
 #include <bookbutton.h>
+#include <libraryinfowindow.h>
 
 class BookShelfDetailWidget : public QWidget
 {

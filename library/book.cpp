@@ -1,6 +1,6 @@
 #include "book.h"
 
-Book::Book(QString ISBN, QString name, QString writer, QString type, QString press, QString publicationDate, float price)
+Book::Book(QString ISBN, QString name, QString writer, QString type, QString press, QString publicationDate, float price, int bookShelf)
 {
     this->ISBN = ISBN;
     this->name = name;
@@ -9,6 +9,7 @@ Book::Book(QString ISBN, QString name, QString writer, QString type, QString pre
     this->press = press;
     this->publicationDate = publicationDate;
     this->price = price;
+    this->bookShelf = bookShelf;
 }
 
 QString Book::getISBN()
@@ -39,6 +40,11 @@ QString Book::getPress()
 QString Book::getPublicationDate()
 {
     return this->publicationDate;
+}
+
+int Book::getShelfNumber()
+{
+    return this->bookShelf;
 }
 
 float Book::getPrice()

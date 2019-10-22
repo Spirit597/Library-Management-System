@@ -6,6 +6,9 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QMessageBox>
+#include <QTableWidget>
+#include <QTableWidgetItem>
+#include <QHeaderView>
 
 #include <QJsonObject>
 #include <QJsonDocument>
@@ -24,6 +27,7 @@ public:
     void setPress(QString press);
     void setPublicationDate(QString publicationDate);
     void setPrice(float price);
+    void setBookShelf(int shelfnumber);
     void setParameter(QString ID, QString role, QTcpSocket *tcpClient);
 
 
@@ -32,6 +36,7 @@ public:
     void dealSaveEdit();
     void dealDelete();
     void dealBuyBook();
+    void showShelfList();
 
     void buyBookMode();//采购新书的界面与该界面类似，故重复利用
 
@@ -43,6 +48,7 @@ private:
     QLabel *pressLabel;
     QLabel *publicationDateLabel;
     QLabel *priceLabel;
+    QLabel *bookShelfLabel;
 
     QLabel *ISBNLineEdit;//这个变量的类型是之后修改成QLabel的，务必注意不要弄错
     QLineEdit *nameLineEdit;
@@ -52,6 +58,7 @@ private:
     QLineEdit *publicationDateLineEdit;
     QLineEdit *priceLineEdit;
     QLineEdit *buyBookISBNLineEdit;
+    QLineEdit *bookShelfLineEdit;
 
 
     QFrame *basicInfo;
@@ -61,6 +68,8 @@ private:
     QPushButton *saveEditButton;
     QPushButton *deleteButton;
     QPushButton *confirmBuyButton;
+
+    QTableWidget *shelfTable;
 
     QString currentUserID;
     QString currentUserRole;

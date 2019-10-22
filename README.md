@@ -95,8 +95,8 @@ A  simple Library-Management-System demo
 
   - [ ] 呈现方式？
   
-- [ ] **BookDetailWidget**:编辑书的属性时，**移动书的所在位置**
+- [x] **BookDetailWidget**:编辑书的属性时，**移动书的所在位置**
 
   - [ ] 上方：书的属性，LineEdit输入框；下方：调用原生呈现数据库表格的widget，用来显示书架列表；
-  - [ ] 如何移动？指定新的bookShelf编号；至于Bookshelf表中容量的增减，已经利用触发器实现了
+  - [x] 如何移动？指定新的bookShelf编号；至于Bookshelf表中容量的增减，已经利用触发器实现了
 

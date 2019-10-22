@@ -1,5 +1,6 @@
 #include "bookdetailwidget.h"
 
+
 BookDetailWidget::BookDetailWidget(QWidget *parent) : QWidget(parent)
 {
 
@@ -7,9 +8,24 @@ BookDetailWidget::BookDetailWidget(QWidget *parent) : QWidget(parent)
     basicInfo->setFrameStyle(QFrame::Panel | QFrame::Sunken);
     basicInfo->setLineWidth(2);
     basicInfo->move(20, 20);
-    basicInfo->resize(400, 250);
+    basicInfo->resize(400, 310);
 
     this->setMinimumWidth(440);
+
+    shelfTable = new QTableWidget(this);
+    shelfTable->resize(400,170);
+    shelfTable->move(20,340);
+    shelfTable->setWindowTitle("书架列表");
+    shelfTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    shelfTable->setSelectionBehavior(QAbstractItemView::SelectRows);
+    QHeaderView *verticalheader = shelfTable->verticalHeader();
+    verticalheader->setVisible(false);
+    QHeaderView *horizontalHeader = shelfTable->horizontalHeader();
+    horizontalHeader->setDefaultSectionSize(133);
+
+
+    shelfTable->show();
+
 
     ISBNLabel = new QLabel("ISBN：", basicInfo);
     ISBNLabel->move(20, 24);
@@ -68,6 +84,15 @@ BookDetailWidget::BookDetailWidget(QWidget *parent) : QWidget(parent)
     priceLineEdit->move(100, 200);
     priceLineEdit->setReadOnly(true);
 
+    bookShelfLabel = new QLabel("书架编号", basicInfo);
+    bookShelfLabel->move(20, 234);
+
+    bookShelfLineEdit = new QLineEdit(basicInfo);
+    bookShelfLineEdit->resize(280, 20);
+    bookShelfLineEdit->move(100, 230);
+    bookShelfLineEdit->setReadOnly(true);
+
+
     borrowButton = new QPushButton("借书", this);
     borrowButton->resize(80, 30);
     borrowButton->move(340, 300);
@@ -75,12 +100,12 @@ BookDetailWidget::BookDetailWidget(QWidget *parent) : QWidget(parent)
 
     editButton = new QPushButton("编辑", this);
     editButton->resize(80, 30);
-    editButton->move(240, 300);
+    editButton->move(240, 280);
     connect(editButton, &QPushButton::clicked, this, &BookDetailWidget::dealEdit);
 
     saveEditButton = new QPushButton("保存", this);
     saveEditButton->resize(80, 30);
-    saveEditButton->move(240, 300);
+    saveEditButton->move(240, 280);
     saveEditButton->hide();
     connect(saveEditButton, &QPushButton::clicked, this, &BookDetailWidget::dealSaveEdit);
 
@@ -88,7 +113,7 @@ BookDetailWidget::BookDetailWidget(QWidget *parent) : QWidget(parent)
 
     deleteButton = new QPushButton("删除", this);
     deleteButton->resize(80, 30);
-    deleteButton->move(340, 300);
+    deleteButton->move(340, 280);
     connect(deleteButton, &QPushButton::clicked, this, &BookDetailWidget::dealDelete);
 
 
@@ -137,6 +162,10 @@ void BookDetailWidget::setPrice(float price)
     this->priceLineEdit->setText(QString::number(price, 'f', 2));
 }
 
+void BookDetailWidget::setBookShelf(int shelfnumber)
+{
+    this->bookShelfLineEdit->setText(QString::number(shelfnumber));
+}
 
 
 void BookDetailWidget::setParameter(QString ID, QString role, QTcpSocket *tcpClient)
@@ -245,6 +274,7 @@ void BookDetailWidget::dealEdit()
     pressLineEdit->setReadOnly(false);
     publicationDateLineEdit->setReadOnly(false);
     priceLineEdit->setReadOnly(false);
+    bookShelfLineEdit->setReadOnly(false);
 
 
 }
@@ -262,7 +292,7 @@ void BookDetailWidget::dealSaveEdit()
     editBookPackage.insert("press", pressLineEdit->text());
     editBookPackage.insert("publicationDate", publicationDateLineEdit->text());
     editBookPackage.insert("price", priceLineEdit->text().toFloat());
-
+    editBookPackage.insert("bookShelf", bookShelfLineEdit->text().toInt());
 
     QByteArray byte_array = QJsonDocument(editBookPackage).toJson();
     tcpClient->write(byte_array);
@@ -425,4 +455,49 @@ void BookDetailWidget::buyBookMode()
     buyBookISBNLineEdit->resize(280, 20);
     buyBookISBNLineEdit->move(100, 20);
 
+}
+
+void BookDetailWidget::showShelfList()
+{
+    shelfTable->clearContents();
+
+    QJsonObject getShelfsInfoPackage;
+    getShelfsInfoPackage.insert("type","get shelfs information");
+
+    tcpClient = this->tcpClient;
+    QByteArray byte_array = QJsonDocument(getShelfsInfoPackage).toJson();
+    tcpClient->write(byte_array);
+    if(tcpClient->waitForReadyRead(1000))//阻塞式连接
+    {
+        QByteArray result = tcpClient->readAll();
+        if(!result.isEmpty())
+        {
+            QJsonObject resultInfo = QJsonDocument::fromJson(result).object();
+            QStringList header;
+            shelfTable->setRowCount(resultInfo.count());
+            shelfTable->setColumnCount(3);
+            header<<"ShelfNumber"<<"ShelfType"<<"ShelfCapacity";//表头
+            shelfTable->setHorizontalHeaderLabels(header);
+//            shelfTable->setResizeMode(2, QHeaderView::Stretch);
+            for(int i = 1; i <=resultInfo.count() ; i++)
+            {
+                QJsonObject temp = resultInfo.value("shelfs" + QString::number(i)).toObject();
+
+                int ShelfNumber = temp.value("ShelfNumber").toInt();
+                QString ShelfType = temp.value("ShelfType").toString();
+                int ShelfCapacity = temp.value("ShelfCapacity").toInt();
+
+                shelfTable->setItem(i-1,0,new QTableWidgetItem(QString::number(ShelfNumber)));
+                shelfTable->setItem(i-1,1,new QTableWidgetItem(ShelfType));
+                shelfTable->setItem(i-1,2,new QTableWidgetItem(QString::number(ShelfCapacity)));
+
+            }
+            shelfTable->resizeRowsToContents();
+//            shelfTable->resizeColumnsToContents();
+
+            shelfTable->show();
+
+        }
+
+    }
 }

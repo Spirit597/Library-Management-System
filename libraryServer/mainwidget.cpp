@@ -263,7 +263,7 @@ void MainWidget::readDataAndRespond()
                     bookPackage.insert("press", query.value("press").toString());
                     bookPackage.insert("publicationDate", query.value("publicationDate").toString());
                     bookPackage.insert("price", query.value("price").toFloat());
-
+                    bookPackage.insert("bookShelf", query.value("bookShelf").toInt());
 
                     booksPackage.insert("book" + QString::number(number), bookPackage);
 
@@ -294,6 +294,7 @@ void MainWidget::readDataAndRespond()
                     bookPackage.insert("press", query.value("press").toString());
                     bookPackage.insert("publicationDate", query.value("publicationDate").toString());
                     bookPackage.insert("price", query.value("price").toFloat());
+                    bookPackage.insert("bookShelf", query.value("bookShelf").toInt());
 
 
                     booksPackage.insert("book" + QString::number(number), bookPackage);
@@ -812,8 +813,9 @@ void MainWidget::readDataAndRespond()
                 sqlSentence = sqlSentence + clientMessage.value("writer").toString() + "', type = '";
                 sqlSentence = sqlSentence + clientMessage.value("bookType").toString() + "', press = '";
                 sqlSentence = sqlSentence + clientMessage.value("press").toString() + "', publicationDate ='";
-                sqlSentence = sqlSentence + clientMessage.value("publicationDate").toString() + "', price =";
-                sqlSentence = sqlSentence + QString::number(clientMessage.value("price").toDouble(), 'f', 2);
+                sqlSentence = sqlSentence + clientMessage.value("publicationDate").toString() + "', price ='";
+                sqlSentence = sqlSentence + QString::number(clientMessage.value("price").toDouble(), 'f', 2)+"',bookShelf=";
+                sqlSentence = sqlSentence + QString::number(clientMessage.value("bookShelf").toInt());
                 sqlSentence = sqlSentence + " where ISBN = '";
                 sqlSentence = sqlSentence + clientMessage.value("ISBN").toString() + "'";
                 qDebug() << sqlSentence;
