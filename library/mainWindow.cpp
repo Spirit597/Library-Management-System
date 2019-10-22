@@ -261,15 +261,16 @@ void MainWindow::dealDeleteBook(QString ISBN)
 
 void MainWindow::dealEditBookSuc(QString ISBN, QString name, QString wri, QString type, QString press, QString pubDate, float price)
 {
-    for(int i=0; i<booksList.count(); i++)
-    {
-        if(booksList[i]->getISBN() == ISBN)
-        {
-            booksList[i]->setProperty(name, wri, type, press, pubDate, price);
-            booksButtonsList[i]->setText("ISBN：" + ISBN + "\n书名：" + name + "\n作者：" + wri + "\n类别：" + type + "\n出版社：" + press);
-            break;
-        }
-    }
+//    for(int i=0; i<booksList.count(); i++)
+//    {
+//        if(booksList[i]->getISBN() == ISBN)
+//        {
+//            booksList[i]->setProperty(name, wri, type, press, pubDate, price);
+//            booksButtonsList[i]->setText("ISBN：" + ISBN + "\n书名：" + name + "\n作者：" + wri + "\n类别：" + type + "\n出版社：" + press);
+//            break;
+//        }
+//    }
+    this->getBooksInfo();
 }
 
 void MainWindow::upDateCurrentUser(QString ID, QString role)
@@ -343,11 +344,10 @@ void MainWindow::createBookDetailWin(QString ISBN)
             bookDetailWin->setPublicationDate(booksList[i]->getPublicationDate());
             bookDetailWin->setPrice(booksList[i]->getPrice());
             bookDetailWin->setBookShelf(booksList[i]->getShelfNumber());
-
             break;
         }
     }
-    bookDetailWin->showShelfList();
+
     bookDetailWin->show();
 
 }
@@ -424,6 +424,7 @@ void MainWindow::getBooksInfo()
                 matchedBooksButtonsList.append(oneBookButton);
                 connect(oneBookButton, &BookButton::clicked, oneBookButton, &BookButton::sendSignal);
                 connect(oneBookButton, &BookButton::ISBNsignal, this, &MainWindow::createBookDetailWin);
+
 
 
                 QString ISBN = temp.value("ISBN").toString();

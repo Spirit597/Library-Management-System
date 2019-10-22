@@ -3,12 +3,14 @@
 
 #include <QWidget>
 #include <QLabel>
+#include <QComboBox>
 #include <QLineEdit>
 #include <QPushButton>
 #include <QMessageBox>
 #include <QTableWidget>
 #include <QTableWidgetItem>
 #include <QHeaderView>
+#include <QVector>
 
 #include <QJsonObject>
 #include <QJsonDocument>
@@ -37,6 +39,8 @@ public:
     void dealDelete();
     void dealBuyBook();
     void showShelfList();
+    void showShelfListByType(QString shelfType);
+
 
     void buyBookMode();//采购新书的界面与该界面类似，故重复利用
 
@@ -53,7 +57,7 @@ private:
     QLabel *ISBNLineEdit;//这个变量的类型是之后修改成QLabel的，务必注意不要弄错
     QLineEdit *nameLineEdit;
     QLineEdit *writerLineEdit;
-    QLineEdit *typeLineEdit;
+    QComboBox *typeComboBox;
     QLineEdit *pressLineEdit;
     QLineEdit *publicationDateLineEdit;
     QLineEdit *priceLineEdit;
@@ -75,10 +79,14 @@ private:
     QString currentUserRole;
     QTcpSocket *tcpClient;
 
+    QStringList shelfTypeList;
+    QMap <QString,QString> shelfTypeMapping;//书架类别的映射容器,对应表
+
 signals:
     void ISBNsignal(QString ISBN);
     void editBookSucSignal(QString ISBN, QString name, QString wri, QString type, QString press, QString pubDate, float price);
     void buySucSignal();
+//    void sendShelfTypeSignal();
 
 
 public slots:

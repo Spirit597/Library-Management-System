@@ -22,8 +22,6 @@ BookDetailWidget::BookDetailWidget(QWidget *parent) : QWidget(parent)
     verticalheader->setVisible(false);
     QHeaderView *horizontalHeader = shelfTable->horizontalHeader();
     horizontalHeader->setDefaultSectionSize(133);
-
-
     shelfTable->show();
 
 
@@ -55,10 +53,28 @@ BookDetailWidget::BookDetailWidget(QWidget *parent) : QWidget(parent)
     typeLabel = new QLabel("类型：", basicInfo);
     typeLabel->move(20, 114);
 
-    typeLineEdit = new QLineEdit(basicInfo);
-    typeLineEdit->resize(280, 20);
-    typeLineEdit->move(100, 110);
-    typeLineEdit->setReadOnly(true);
+    typeComboBox = new QComboBox(basicInfo);
+    typeComboBox->resize(280,20);
+    typeComboBox->move(100,110);
+    shelfTypeList<<"马克思主义、列宁主义、毛泽东思想、邓小平理论"
+                 <<"哲学、宗教"
+                 <<"社会科学总论"
+                 <<"政治、法律"
+                 <<"文学"
+                 <<"艺术"
+                 <<"历史、地理";
+//    connect(typeComboBox,&QComboBox::editTextChanged, this, s)
+    connect(typeComboBox, &QComboBox::currentTextChanged, this, &BookDetailWidget::showShelfListByType);
+
+    shelfTypeMapping.insert("马克思主义、列宁主义、毛泽东思想、邓小平理论","A");
+    shelfTypeMapping.insert("哲学、宗教","B");
+    shelfTypeMapping.insert("社会科学总论","C");
+    shelfTypeMapping.insert("政治、法律","D");
+    shelfTypeMapping.insert("文学","E");
+    shelfTypeMapping.insert("艺术","F");
+    shelfTypeMapping.insert("历史、地理","F");
+
+
 
     pressLabel = new QLabel("出版社：", basicInfo);
     pressLabel->move(20, 144);
@@ -118,7 +134,6 @@ BookDetailWidget::BookDetailWidget(QWidget *parent) : QWidget(parent)
 
 
 
-
 }
 
 void BookDetailWidget::setISBN(QString ISBN)
@@ -141,7 +156,7 @@ void BookDetailWidget::setWriter(QString writer)
 void BookDetailWidget::setType(QString type)
 {
 
-    this->typeLineEdit->setText(type);
+    this->typeComboBox->addItem(type);
 }
 
 void BookDetailWidget::setPress(QString press)
@@ -270,7 +285,12 @@ void BookDetailWidget::dealEdit()
 
     nameLineEdit->setReadOnly(false);
     writerLineEdit->setReadOnly(false);
-    typeLineEdit->setReadOnly(false);
+    for(int i = 0; i<shelfTypeList.size(); ++i)
+        if(shelfTypeList[i]!= typeComboBox->currentText())
+        {
+            typeComboBox->addItem(shelfTypeList[i]);
+        }
+
     pressLineEdit->setReadOnly(false);
     publicationDateLineEdit->setReadOnly(false);
     priceLineEdit->setReadOnly(false);
@@ -288,7 +308,7 @@ void BookDetailWidget::dealSaveEdit()
     editBookPackage.insert("ISBN", ISBNLineEdit->text());
     editBookPackage.insert("name", nameLineEdit->text());
     editBookPackage.insert("writer", writerLineEdit->text());
-    editBookPackage.insert("bookType", typeLineEdit->text());
+    editBookPackage.insert("bookType", typeComboBox->currentText());
     editBookPackage.insert("press", pressLineEdit->text());
     editBookPackage.insert("publicationDate", publicationDateLineEdit->text());
     editBookPackage.insert("price", priceLineEdit->text().toFloat());
@@ -306,7 +326,7 @@ void BookDetailWidget::dealSaveEdit()
             if(resultInfo.value("result").toString() == "suc")
             {
                 QMessageBox::StandardButton info = QMessageBox::information(NULL, "", "本次修改成功");
-                emit editBookSucSignal(ISBNLineEdit->text(), nameLineEdit->text(), writerLineEdit->text(), typeLineEdit->text(), pressLineEdit->text(), \
+                emit editBookSucSignal(ISBNLineEdit->text(), nameLineEdit->text(), writerLineEdit->text(), typeComboBox->currentText(), pressLineEdit->text(), \
                                        publicationDateLineEdit->text(), priceLineEdit->text().toFloat());
                 this->close();
             }
@@ -375,11 +395,11 @@ void BookDetailWidget::dealBuyBook()
         QMessageBox::StandardButton info = QMessageBox::information(NULL, "Error", "作者的输入不能为空");
         return;
     }
-    else if(typeLineEdit->text() == "")
-    {
-        QMessageBox::StandardButton info = QMessageBox::information(NULL, "Error", "类型的输入不能为空");
-        return;
-    }
+//    else if(typeLineEdit->text() == "")
+//    {
+//        QMessageBox::StandardButton info = QMessageBox::information(NULL, "Error", "类型的输入不能为空");
+//        return;
+//    }
     else if(pressLineEdit->text() == "")
     {
         QMessageBox::StandardButton info = QMessageBox::information(NULL, "Error", "出版社的输入不能为空");
@@ -402,7 +422,7 @@ void BookDetailWidget::dealBuyBook()
     buyBookPackage.insert("ISBN", buyBookISBNLineEdit->text());
     buyBookPackage.insert("name", nameLineEdit->text());
     buyBookPackage.insert("writer", writerLineEdit->text());
-    buyBookPackage.insert("bookType", typeLineEdit->text());
+    buyBookPackage.insert("bookType", typeComboBox->currentText());
     buyBookPackage.insert("press", pressLineEdit->text());
     buyBookPackage.insert("publicationDate", publicationDateLineEdit->text());
     buyBookPackage.insert("price", priceLineEdit->text().toFloat());
@@ -441,7 +461,8 @@ void BookDetailWidget::buyBookMode()
 
     nameLineEdit->setReadOnly(false);
     writerLineEdit->setReadOnly(false);
-    typeLineEdit->setReadOnly(false);
+//    typeLineEdit->setReadOnly(false);
+    typeComboBox->addItems(shelfTypeList);
     pressLineEdit->setReadOnly(false);
     publicationDateLineEdit->setReadOnly(false);
     priceLineEdit->setReadOnly(false);
@@ -457,6 +478,7 @@ void BookDetailWidget::buyBookMode()
 
 }
 
+//这个似乎用不到了
 void BookDetailWidget::showShelfList()
 {
     shelfTable->clearContents();
@@ -493,11 +515,54 @@ void BookDetailWidget::showShelfList()
 
             }
             shelfTable->resizeRowsToContents();
-//            shelfTable->resizeColumnsToContents();
-
             shelfTable->show();
 
         }
 
     }
+}
+
+void BookDetailWidget::showShelfListByType( QString shelfType)
+{
+    shelfTable->clearContents();
+
+    QJsonObject getShelfsInfoPackage;
+    getShelfsInfoPackage.insert("type","get shelfs information by shelfType");
+    QString mappingtype = shelfTypeMapping.find(shelfType).value();//映射关系转换："马克思主义、列宁主义、毛泽东思想、邓小平理论","A"
+    getShelfsInfoPackage.insert("shelftype",mappingtype);
+
+    tcpClient = this->tcpClient;
+    QByteArray byte_array = QJsonDocument(getShelfsInfoPackage).toJson();
+    tcpClient->write(byte_array);
+    if(tcpClient->waitForReadyRead(1000))//阻塞式连接
+    {
+        QByteArray result = tcpClient->readAll();
+        if(!result.isEmpty())
+        {
+            QJsonObject resultInfo = QJsonDocument::fromJson(result).object();
+            QStringList header;
+            shelfTable->setRowCount(resultInfo.count());
+            shelfTable->setColumnCount(3);
+            header<<"ShelfNumber"<<"ShelfType"<<"ShelfCapacity";//表头
+            shelfTable->setHorizontalHeaderLabels(header);
+            for(int i = 1; i <=resultInfo.count() ; i++)
+            {
+                QJsonObject temp = resultInfo.value("shelfs" + QString::number(i)).toObject();
+
+                int ShelfNumber = temp.value("ShelfNumber").toInt();
+                QString ShelfType = temp.value("ShelfType").toString();
+                int ShelfCapacity = temp.value("ShelfCapacity").toInt();
+
+                shelfTable->setItem(i-1,0,new QTableWidgetItem(QString::number(ShelfNumber)));
+                shelfTable->setItem(i-1,1,new QTableWidgetItem(ShelfType));
+                shelfTable->setItem(i-1,2,new QTableWidgetItem(QString::number(ShelfCapacity)));
+
+            }
+            shelfTable->resizeRowsToContents();
+            shelfTable->show();
+
+        }
+
+    }
+
 }

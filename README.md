@@ -97,7 +97,6 @@ A  simple Library-Management-System demo
 - [x] **BookDetailWidget**:编辑书的属性时，**移动书的所在位置**
 
   - [x] 上方：书的属性，LineEdit输入框；下方：调用原生呈现数据库表格的widget，用来显示书架列表；
-  - [ ] 
-  - [x] 如何移动？指定新的bookShelf编号；至于Bookshelf表中容量的增减，已经利用触发器实现了
-  - [ ] 如果要更改书的类别？使用下拉菜单显示，change为信号，每触发一次更新一次书架列表（依据change后书的类别）
+    - [x] 单纯移动书的位置？指定新的bookShelf编号；至于Bookshelf表中容量的增减，已经利用触发器实现了
+    - [x] 如果要更改书的类别？使用下拉菜单显示，change为信号，每触发一次更新一次书架列表（依据change后书的类别）
 

@@ -604,6 +604,32 @@ void MainWidget::readDataAndRespond()
                 QByteArray byte_array = QJsonDocument(shelfsPackage).toJson();
                 theClient->write(byte_array);
             }
+            else if(clientMessage.value("type").toString() == "get shelfs information by shelfType")
+            {
+                QString sqlSentence = "select * from BookShelf where ShelfType = '";
+                sqlSentence = sqlSentence + clientMessage.value("shelftype").toString()+"'";
+                qDebug()<<sqlSentence;
+                if(!query.exec(sqlSentence))
+                {
+                    qDebug()<<query.lastError()<< endl;
+                }
+                QJsonObject shelfsPackage;
+                int number = 0;
+                while(query.next())
+                {
+                    number++;
+                    QJsonObject shelfPackage;
+                    shelfPackage.insert("ShelfNumber",query.value("ShelfNumber").toInt());
+                    shelfPackage.insert("ShelfType",query.value("ShelfType").toString());
+                    shelfPackage.insert("ShelfCapacity",query.value("ShelfCapacity").toInt());
+
+                    shelfsPackage.insert("shelfs"+QString::number(number),shelfPackage);
+
+                }
+                QByteArray byte_array = QJsonDocument(shelfsPackage).toJson();
+                theClient->write(byte_array);
+            }
+
 
             else if(clientMessage.value("type").toString() == "get user information")
             {
@@ -814,7 +840,7 @@ void MainWidget::readDataAndRespond()
                 sqlSentence = sqlSentence + clientMessage.value("bookType").toString() + "', press = '";
                 sqlSentence = sqlSentence + clientMessage.value("press").toString() + "', publicationDate ='";
                 sqlSentence = sqlSentence + clientMessage.value("publicationDate").toString() + "', price ='";
-                sqlSentence = sqlSentence + QString::number(clientMessage.value("price").toDouble(), 'f', 2)+"',bookShelf=";
+                sqlSentence = sqlSentence + QString::number(clientMessage.value("price").toDouble(),'f', 2)+"',bookShelf=";
                 sqlSentence = sqlSentence + QString::number(clientMessage.value("bookShelf").toInt());
                 sqlSentence = sqlSentence + " where ISBN = '";
                 sqlSentence = sqlSentence + clientMessage.value("ISBN").toString() + "'";
