@@ -17,7 +17,8 @@ SOURCES += \
     userinfowindow.cpp \
     bookshelf.cpp \
     shelfbutton.cpp \
-    bookshelfdetailwidget.cpp
+    bookshelfdetailwidget.cpp \
+    shelflistwidget.cpp
 
 HEADERS += \
     multichoosecombobox.h \
@@ -34,7 +35,8 @@ HEADERS += \
     userinfowindow.h \
     bookshelf.h \
     shelfbutton.h \
-    bookshelfdetailwidget.h
+    bookshelfdetailwidget.h \
+    shelflistwidget.h
 
 DISTFILES +=
 

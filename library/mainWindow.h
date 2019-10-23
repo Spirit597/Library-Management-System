@@ -13,6 +13,7 @@
 #include "returnbookwindow.h"
 #include "libraryinfowindow.h"
 #include "userinfowindow.h"
+#include "shelflistwidget.h"
 
 class MainWindow : public QWidget
 {
@@ -33,6 +34,7 @@ public:
 
     void createReturnBookWin();
     void createViewLibraryInfoWin();
+    void createViewShelfInfoWin();
     void createUserInfoWin();
     void createBookDetailWin(QString ISBN);
     void createNewBook();
@@ -55,6 +57,8 @@ private:
 
     QPushButton *viewUserInfoButton;
     QPushButton *viewLibraryInfoButton;
+    QPushButton *viewShelfInfoButton;
+
     QPushButton *logOutButton;
     QPushButton *returnBooksButton;
     QPushButton *searchButton;

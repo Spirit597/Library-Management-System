@@ -20,6 +20,12 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     viewLibraryInfoButton->move(120, 0);
     connect(viewLibraryInfoButton, &QPushButton::clicked, this, &MainWindow::createViewLibraryInfoWin);
 
+    viewShelfInfoButton = new QPushButton("查看书架信息", topBar);
+    viewShelfInfoButton->resize(120, 20);
+    viewShelfInfoButton->move(260, 0);
+    connect(viewShelfInfoButton, &QPushButton::clicked, this, &MainWindow::createViewShelfInfoWin);
+
+
     logOutButton = new QPushButton("注销", topBar);
     logOutButton->resize(50, 20);
     logOutButton->move(730, 0);
@@ -309,11 +315,19 @@ void MainWindow::createViewLibraryInfoWin()
     }
     LibraryInfoWindow *libraryInfoWin = new LibraryInfoWindow;
     libraryInfoWin->getLibraryInfo(tcpClient);
-    //(已解决）继承主界面的tcpClient,这样比较简便,但是这样不规范也不安全
-    libraryInfoWin->setTcpClient(this->tcpClient);
-    libraryInfoWin->getShelfInfo();
+//    //(已解决）继承主界面的tcpClient,这样比较简便,但是这样不规范也不安全
+//    libraryInfoWin->setTcpClient(this->tcpClient);
+//    libraryInfoWin->getShelfInfo();
     libraryInfoWin->show();
 
+}
+
+void MainWindow::createViewShelfInfoWin()
+{
+    ShelfListWidget *shelfListInfoWin = new ShelfListWidget;
+    shelfListInfoWin->setTcpClient(this->tcpClient);
+    shelfListInfoWin->getShelfInfo();
+    shelfListInfoWin->show();
 }
 
 void MainWindow::createUserInfoWin()
