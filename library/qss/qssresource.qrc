@@ -1,0 +1,23 @@
+<RCC>
+    <qresource prefix="/qss">
+        <file>silvery/add_bottom.png</file>
+        <file>silvery/add_left.png</file>
+        <file>silvery/add_right.png</file>
+        <file>silvery/add_top.png</file>
+        <file>silvery/branch_close.png</file>
+        <file>silvery/branch_open.png</file>
+        <file>silvery/calendar_nextmonth.png</file>
+        <file>silvery/calendar_prevmonth.png</file>
+        <file>silvery/checkbox_checked.png</file>
+        <file>silvery/checkbox_checked_disable.png</file>
+        <file>silvery/checkbox_parcial.png</file>
+        <file>silvery/checkbox_parcial_disable.png</file>
+        <file>silvery/checkbox_unchecked.png</file>
+        <file>silvery/checkbox_unchecked_disable.png</file>
+        <file>silvery/radiobutton_checked.png</file>
+        <file>silvery/radiobutton_checked_disable.png</file>
+        <file>silvery/radiobutton_unchecked.png</file>
+        <file>silvery/radiobutton_unchecked_disable.png</file>
+        <file>silvery.css</file>
+    </qresource>
+</RCC>

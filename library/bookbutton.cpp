@@ -5,6 +5,7 @@ BookButton::BookButton(QWidget *parent) : QPushButton(parent)
 
     this->setStyleSheet("text-align: left;");
     this->resize(780, 80);
+//    this->loadCss();
 }
 
 void BookButton::setISBN(QString ISBN)
@@ -24,4 +25,11 @@ QString BookButton::getISBN()
 void BookButton::sendSignal()
 {
     emit ISBNsignal(this->ISBN);
+}
+
+void BookButton::loadCss()
+{
+    QFile qssFile(":/qss/silvery.css");
+    qssFile.open(QIODevice::ReadOnly);
+    this->setStyleSheet(qssFile.readAll());
 }

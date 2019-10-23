@@ -2,7 +2,7 @@
 #define MainWindow_H
 
 #include <QFrame>
-
+#include "QStyleFactory"
 #include <QTcpSocket>
 
 #include "book.h"

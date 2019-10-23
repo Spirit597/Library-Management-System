@@ -21,7 +21,9 @@ BookShelfDetailWidget::BookShelfDetailWidget(QWidget *parent) : QWidget(parent)
     bookListWidget = new QWidget;
     bookListWidget->setMinimumWidth(780);
     bookListWidget->resize(780,0);
+    bookListWidget->setStyle(QStyleFactory::create("fusion"));
     bookListWidget->show();
+
 
     scrollArea = new QScrollArea(this);
     scrollArea->setWidget(bookListWidget);

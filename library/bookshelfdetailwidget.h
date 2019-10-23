@@ -9,6 +9,7 @@
 #include <QPushButton>
 #include <QScrollArea>
 #include <QHeaderView>
+#include "QStyleFactory"
 
 #include <book.h>
 #include <bookbutton.h>

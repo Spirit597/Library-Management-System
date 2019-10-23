@@ -3,6 +3,7 @@
 #include <QString>
 #include <QPushButton>
 #include <QTcpSocket>
+#include <QFile>
 
 class ShelfButton : public QPushButton
 {
@@ -12,6 +13,7 @@ public:
 
     void setShelfNumber(int ShelfNumber);
     void sendCreatNewWin();
+
 private:
     int ShelfNumber;
 

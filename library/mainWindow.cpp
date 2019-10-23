@@ -73,6 +73,8 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     booksListWidget = new QWidget;
     booksListWidget->setMinimumWidth(780);
     booksListWidget->resize(780, 0);
+    booksListWidget->setStyle(QStyleFactory::create("fusion"));
+
     booksListWidget->show();
 
 
@@ -80,6 +82,9 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     scrollArea->setWidget(booksListWidget);
     scrollArea->move(0,130);
     scrollArea->setFixedSize(800,350);
+
+
+
 
     createBookButton = new QPushButton("购买新书", this);
     createBookButton->resize(100, 30);

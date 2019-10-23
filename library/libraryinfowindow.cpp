@@ -30,6 +30,7 @@ LibraryInfoWindow::LibraryInfoWindow(QWidget *parent) : QWidget(parent)
     ScrollArea->setFixedSize(520,300);
     ScrollArea->move(1,200);
 
+
 }
 
 void LibraryInfoWindow::returnMainWindow()
