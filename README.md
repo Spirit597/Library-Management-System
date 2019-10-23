@@ -76,7 +76,7 @@ A  simple Library-Management-System demo
 
 ### 具体实现
 
-- [ ] **BookShelfListWidget**:总的书架列表，单独开一个窗口：**新增书架** 按钮放在此窗口中；
+- [x] **BookShelfListWidget**:总的书架列表，单独开一个窗口：**新增书架** 按钮放在此窗口中；
 
   - [x] 新增时，仅指定type，容量默认初始值；书架编号的话怎么分配呢？
 
@@ -96,9 +96,12 @@ A  simple Library-Management-System demo
     
     
 
-- [ ] **BookShelfDetailWidget**:单个书架详情页上 ：**划分、删除**
+- [x] **BookShelfDetailWidget**:单个书架详情页上 ：**划分、删除**
 
-  - [ ] 呈现方式？
+  - [x] 呈现方式？
+  - [x] 框架基本完成，剩下绑定信号
+  - [x] 更改划分，还有小bug
+  - [ ] 删除
   
 - [x] **BookDetailWidget**:编辑书的属性时，**移动书的所在位置**
 
@@ -106,3 +109,6 @@ A  simple Library-Management-System demo
     - [x] 单纯移动书的位置？指定新的bookShelf编号；至于Bookshelf表中容量的增减，已经利用触发器实现了
     - [x] 如果要更改书的类别？使用下拉菜单显示，change为信号，每触发一次更新一次书架列表（依据change后书的类别）
 
+- [ ] 修改书架容量：
+  - [ ] 购入书时，放置书的位置，减少书架容量；
+  - [ ] 删除书时，增加所在书架的容量；

@@ -36,7 +36,6 @@ private:
     QFrame *basicInfo;
     QLineEdit *shelfNumberLineEdit;
     QComboBox *shelfTypeComboBox;
-    QLineEdit *shelfTypeLineEdit;
     QLineEdit *shelfCapacityLineEdit;
 
     QPushButton *getNewShelf;

@@ -71,7 +71,7 @@ BookDetailWidget::BookDetailWidget(QWidget *parent) : QWidget(parent)
     shelfTypeMapping.insert("政治、法律","D");
     shelfTypeMapping.insert("文学","E");
     shelfTypeMapping.insert("艺术","F");
-    shelfTypeMapping.insert("历史、地理","F");
+    shelfTypeMapping.insert("历史、地理","J");
 
 
 

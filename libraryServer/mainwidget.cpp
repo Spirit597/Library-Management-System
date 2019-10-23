@@ -681,6 +681,45 @@ void MainWidget::readDataAndRespond()
                 theClient->write(byte_array);
             }
 
+            else if(clientMessage.value("type").toString() == "get shelf information by shelfnumber")
+            {
+                QString sqlSentence = "select * from BookShelf where ShelfNumber = ";
+                sqlSentence = sqlSentence + clientMessage.value("ShelfNumber").toString();
+                qDebug()<<sqlSentence;
+                if(!query.exec(sqlSentence))
+                {
+                    qDebug()<<query.lastError()<< endl;
+                }
+                QJsonObject shelfPackage;
+
+                while(query.next())
+                {
+                    shelfPackage.insert("ShelfNumber",query.value("ShelfNumber").toInt());
+                    shelfPackage.insert("ShelfType",query.value("ShelfType").toString());
+                    shelfPackage.insert("ShelfCapacity",query.value("ShelfCapacity").toInt());
+                }
+                QByteArray byte_array = QJsonDocument(shelfPackage).toJson();
+                theClient->write(byte_array);
+            }
+
+            else if(clientMessage.value("type").toString() == "update shelftype by shelfnumber")
+            {
+                QString sqlSentence = "update BookShelf set ShelfType = '"+clientMessage.value("ShelfType").toString();
+                sqlSentence = sqlSentence + "' where ShelfNumber = "+ clientMessage.value("ShelfNumber").toString();
+                qDebug()<<sqlSentence;
+                if(!query.exec(sqlSentence))
+                {
+                    qDebug()<<query.lastError()<< endl;
+                }
+                QJsonObject shelfPackage;
+
+                while(query.next())
+                {
+                    shelfPackage.insert("result","succeed");
+                }
+                QByteArray byte_array = QJsonDocument(shelfPackage).toJson();
+                theClient->write(byte_array);
+            }
 
             else if(clientMessage.value("type").toString() == "get user information")
             {
