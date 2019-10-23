@@ -12,9 +12,18 @@ ShelfListWidget::ShelfListWidget(QWidget *parent):QWidget(parent)
     basicInfo->resize(500, 160);
 
     QFormLayout *newShelfLayout = new QFormLayout();
+
     shelfNumberLineEdit = new QLineEdit();
+    shelfNumberLineEdit->setText("默认分配，无需填写");
+    shelfNumberLineEdit->setReadOnly(true);
+
     shelfTypeLineEdit = new QLineEdit();
+
     shelfCapacityLineEdit = new QLineEdit();
+    shelfCapacityLineEdit->setText("默认初始为30");
+    shelfCapacityLineEdit->setReadOnly(true);
+
+
     newShelfLayout->addRow(QStringLiteral("书架编号："), shelfNumberLineEdit);
     newShelfLayout->addRow(QStringLiteral("书架类别："), shelfTypeLineEdit);
     newShelfLayout->addRow(QStringLiteral("书架容量："), shelfCapacityLineEdit);
