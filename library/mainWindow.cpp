@@ -8,7 +8,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 
     topBar = new QFrame;
     topBar->setParent(this);
-    topBar->setFixedSize(780, 20);
+    topBar->setFixedSize(780, 30);
     topBar->setFrameShape(QFrame::StyledPanel);
 
     viewUserInfoButton = new QPushButton("查看个人信息", topBar);
@@ -82,9 +82,6 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     scrollArea->setWidget(booksListWidget);
     scrollArea->move(0,130);
     scrollArea->setFixedSize(800,350);
-
-
-
 
     createBookButton = new QPushButton("购买新书", this);
     createBookButton->resize(100, 30);

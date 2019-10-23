@@ -116,12 +116,12 @@ BookDetailWidget::BookDetailWidget(QWidget *parent) : QWidget(parent)
 
     editButton = new QPushButton("编辑", this);
     editButton->resize(80, 30);
-    editButton->move(240, 280);
+    editButton->move(100, 280);
     connect(editButton, &QPushButton::clicked, this, &BookDetailWidget::dealEdit);
 
     saveEditButton = new QPushButton("保存", this);
     saveEditButton->resize(80, 30);
-    saveEditButton->move(240, 280);
+    saveEditButton->move(160, 280);
     saveEditButton->hide();
     connect(saveEditButton, &QPushButton::clicked, this, &BookDetailWidget::dealSaveEdit);
 
@@ -129,7 +129,7 @@ BookDetailWidget::BookDetailWidget(QWidget *parent) : QWidget(parent)
 
     deleteButton = new QPushButton("删除", this);
     deleteButton->resize(80, 30);
-    deleteButton->move(340, 280);
+    deleteButton->move(300, 280);
     connect(deleteButton, &QPushButton::clicked, this, &BookDetailWidget::dealDelete);
 
 

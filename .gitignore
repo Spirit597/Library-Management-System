@@ -10,3 +10,4 @@ build-library-Desktop_Qt_5_8_0_MinGW_32bit-Debug/
 *.user
 *.user
 library/library.pro.user
+!/build-libraryServer-Desktop_Qt_5_8_0_MinGW_32bit-Debug/libraryDB.db
