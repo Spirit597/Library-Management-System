@@ -581,6 +581,57 @@ void MainWidget::readDataAndRespond()
                 QByteArray byte_array = QJsonDocument(loginResponsePackage).toJson();
                 theClient->write(byte_array);
             }
+            else if(clientMessage.value("type").toString() == "buy new shelf")
+            {
+                /* 查询当前剩余金额
+                 * 若足够：执行insert，返回购置成功；
+                 * 若不足：返回购置失败
+                 */
+                QString sqlSentence = "select fund from LibraryInfo";
+                float libraryFund;
+                QString  strshelfPrice = clientMessage.value("shelfPrice").toString();
+                float shelfPrice = strshelfPrice.toFloat();
+                if(!query.exec(sqlSentence))
+                {
+                    qDebug()<<query.lastError()<< endl;
+                }
+                while(query.next())
+                {
+                    libraryFund = query.value("fund").toFloat();
+                }
+                //金额不足
+                if( libraryFund < shelfPrice)
+                {
+                    qDebug()<<"金额不足，剩余："<<libraryFund<< endl;
+                    QJsonObject fundResponsePackage;
+                    fundResponsePackage.insert("result", "failed");
+                    QByteArray byte_array = QJsonDocument(fundResponsePackage).toJson();
+                    theClient->write(byte_array);
+                }
+                //满足购置条件
+                else
+                {
+                    QString shelfType = clientMessage.value("shelfType").toString();
+                    libraryFund = libraryFund - shelfPrice;
+                    QString sqlSentence1 = "update LibraryInfo set fund = ";
+                    sqlSentence1 = sqlSentence1 +  QString::number(libraryFund);
+                    if(!query.exec(sqlSentence1))
+                    {
+                        qDebug()<<query.lastError()<< endl;
+                    }
+                    QString sqlSentence2 = "insert into BookShelf(shelfType) values ('";
+                    sqlSentence2 = sqlSentence2 +shelfType + "')";
+                    if(!query.exec(sqlSentence2))
+                    {
+                        qDebug()<<query.lastError()<< endl;
+                    }
+                    QJsonObject fundResponsePackage;
+                    fundResponsePackage.insert("result", "succeed");
+                    QByteArray byte_array = QJsonDocument(fundResponsePackage).toJson();
+                    theClient->write(byte_array);
+                }
+            }
+
             else if(clientMessage.value("type").toString() == "get shelfs information")
             {
                 QString sqlSentence = "select * from BookShelf";

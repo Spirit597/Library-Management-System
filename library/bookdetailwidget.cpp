@@ -63,7 +63,6 @@ BookDetailWidget::BookDetailWidget(QWidget *parent) : QWidget(parent)
                  <<"文学"
                  <<"艺术"
                  <<"历史、地理";
-//    connect(typeComboBox,&QComboBox::editTextChanged, this, s)
     connect(typeComboBox, &QComboBox::currentTextChanged, this, &BookDetailWidget::showShelfListByType);
 
     shelfTypeMapping.insert("马克思主义、列宁主义、毛泽东思想、邓小平理论","A");

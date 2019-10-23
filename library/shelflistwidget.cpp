@@ -17,30 +17,44 @@ ShelfListWidget::ShelfListWidget(QWidget *parent):QWidget(parent)
     shelfNumberLineEdit->setText("默认分配，无需填写");
     shelfNumberLineEdit->setReadOnly(true);
 
-    shelfTypeLineEdit = new QLineEdit();
+    shelfTypeComboBox = new QComboBox();
+    shelfTypeList<<"马克思主义、列宁主义、毛泽东思想、邓小平理论"
+                 <<"哲学、宗教"
+                 <<"社会科学总论"
+                 <<"政治、法律"
+                 <<"文学"
+                 <<"艺术"
+                 <<"历史、地理";
+    shelfTypeComboBox->addItems(shelfTypeList);
+
+    shelfTypeMapping.insert("马克思主义、列宁主义、毛泽东思想、邓小平理论","A");
+    shelfTypeMapping.insert("哲学、宗教","B");
+    shelfTypeMapping.insert("社会科学总论","C");
+    shelfTypeMapping.insert("政治、法律","D");
+    shelfTypeMapping.insert("文学","E");
+    shelfTypeMapping.insert("艺术","F");
+    shelfTypeMapping.insert("历史、地理","F");
 
     shelfCapacityLineEdit = new QLineEdit();
     shelfCapacityLineEdit->setText("默认初始为30");
     shelfCapacityLineEdit->setReadOnly(true);
 
-
     newShelfLayout->addRow(QStringLiteral("书架编号："), shelfNumberLineEdit);
-    newShelfLayout->addRow(QStringLiteral("书架类别："), shelfTypeLineEdit);
+    newShelfLayout->addRow(QStringLiteral("书架类别："), shelfTypeComboBox);
     newShelfLayout->addRow(QStringLiteral("书架容量："), shelfCapacityLineEdit);
     newShelfLayout->setSpacing(10);
     newShelfLayout->setMargin(10);
     basicInfo->setLayout(newShelfLayout);
 
-//    //好像不需要返回按钮？先不处理了
-//    closeShelfWidget.setParent(this);
-//    closeShelfWidget.setText("返回主界面");
-//    closeShelfWidget.resize(100,50);
-//    closeShelfWidget.move(350,140);
-//    closeShelfWidget.show();
-//    需要返回时，书架信息系统给主界面发送一个信号
-//    connect(&closeShelfWidget, &QPushButton::clicked, this, &ShelfListWidget::returnMainWindow);
-//    connect(&shelfDetailWidget, &BookShelfDetailWidget::goBackSignal, this, &ShelfListWidget::backToShelfList);
+    //购置书架
+    getNewShelf = new QPushButton(basicInfo);
+    getNewShelf->setText("购置书架");
+    getNewShelf->resize(80,30);
+    getNewShelf->move(220, 120);
+    getNewShelf->show();
+    connect(getNewShelf, &QPushButton::clicked, this, &ShelfListWidget::dealGetNewShelf);
 
+    shelfPrice = 0.1;
 
     //滑动区域显示书架信息
     shelfListWidget = new QWidget(this);
@@ -76,22 +90,43 @@ void ShelfListWidget::creteShelfDetailWin(int ShelfNumber)
 
 }
 
+//  处理购置书架的函数
+void ShelfListWidget::dealGetNewShelf()
+{
+    /* 查询当前剩余金额
+     * 若足够：执行insert，返回购置成功；
+     * 若不足：返回购置失败
+     */
+    QJsonObject getLibraryInfoPackage;
+    QString newShelfType = shelfTypeComboBox->currentText();
+    QString mappingtype = shelfTypeMapping.find(newShelfType).value();//  映射关系转换："马克思主义、列宁主义、毛泽东思想、邓小平理论","A"
+    getLibraryInfoPackage.insert("type", "buy new shelf");
+    getLibraryInfoPackage.insert("shelfType", mappingtype);
+    getLibraryInfoPackage.insert("shelfPrice", QString::number(shelfPrice));
 
-//上下级窗口切换信号，进入书架详细信息的子菜单，
-//其实是我实现方式略显繁琐了，有空再优化
-//不过其实也有关系，点开详细信息还能返回书架列表
-//void ShelfListWidget::enterShelfDetail()
-//{
-//    this->hide();
-//    shelfDetailWidget->show();
-//}
+    QByteArray byte_array = QJsonDocument(getLibraryInfoPackage).toJson();
+    tcpClient->write(byte_array);
+    if(tcpClient->waitForReadyRead(1000))//阻塞式连接
+    {
+        QByteArray result = tcpClient->readAll();
+        if(!result.isEmpty())
+        {
+            QJsonObject resultInfo = QJsonDocument::fromJson(result).object();
+            if (resultInfo.value("result").toString() == "failed")
+            {
+                QMessageBox::StandardButton info = QMessageBox::information(NULL, "", "购置失败");
 
-//void ShelfListWidget::backToShelfList()
-//{
-//    this->show();
-//    shelfDetailWidget->hide();
-//}
+            }
+            else
+            {
+                QMessageBox::StandardButton info = QMessageBox::information(NULL, "", "购置成功");
+                this->getShelfInfo();
 
+            }
+
+        }
+    }
+}
 
 
 
@@ -146,7 +181,7 @@ void ShelfListWidget::getShelfInfo()
                 int row = (((i-1) / 3) + 1);
                 int column = ((i - 1) % 3) + 1;
                 singleShelfButton->move((column-1)*(singleShelfButton->width()+20),(row-1) * (singleShelfButton->height()+20));
-                if (i%3 == 1)
+                if (i % 3 == 1)
                 {
                     shelfListWidget->resize(shelfListWidget->width(),shelfListWidget->height()+row*(singleShelfButton->height()+20));
                 }
@@ -161,3 +196,4 @@ void ShelfListWidget::getShelfInfo()
 
 
 }
+

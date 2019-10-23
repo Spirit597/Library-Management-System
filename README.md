@@ -82,13 +82,18 @@ A  simple Library-Management-System demo
 
   - [x] 暂定解决办法：autoincrement,书架编号自增。缺陷：删除时，中间会出现空缺，造成有些编号删除后就不会再使用了；
 
-  - [x] 新建时只需指定Type
+  - [x] 新建时只需指定Type。
 
     ```sqlite
     //示例：
     insert into BookShelf (ShelfType)VALUES('B')
+        /* 查询当前剩余金额
+       * 若足够：执行insert，返回购置成功；
+         * 若不足：返回购置失败
+         */
+    
     ```
-
+    
     
 
 - [ ] **BookShelfDetailWidget**:单个书架详情页上 ：**划分、删除**
