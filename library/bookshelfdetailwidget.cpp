@@ -17,14 +17,7 @@ BookShelfDetailWidget::BookShelfDetailWidget(QWidget *parent) : QWidget(parent)
     shelfNumberLineEdit->setReadOnly(true);
 
     shelfTypeComboBox = new QComboBox();
-    shelfTypeList<<"A"
-                 <<"B"
-                 <<"C"
-                 <<"D"
-                 <<"E"
-                 <<"F"
-                 <<"J";
-
+    shelfTypeList<<"A"<<"B"<<"C"<<"D"<<"E"<<"F"<<"J";
 
     shelfTypeMapping.insert("马克思主义、列宁主义、毛泽东思想、邓小平理论","A");
     shelfTypeMapping.insert("哲学、宗教","B");
@@ -117,6 +110,7 @@ void BookShelfDetailWidget::dealClassify()
 }
 
 //还有点小bug
+//已经修复
 void  BookShelfDetailWidget::dealSaveClassify()
 {
     QString newShelfType = shelfTypeComboBox->currentText();
@@ -143,21 +137,64 @@ void  BookShelfDetailWidget::dealSaveClassify()
                 QMessageBox::StandardButton info = QMessageBox::information(NULL, "OK", "重新划分成功");
 
             }
-            else
+            else if(temp.value("result").toString()== "failed")
             {
                 QMessageBox::StandardButton info = QMessageBox::information(NULL, "Error", "重新划分失败");
 
             }
-            classifyShelf->hide();
-            saveClassify->show();
 
        }
+        classifyShelf->show();
+        saveClassify->hide();
+
 
     }
 }
 
 void BookShelfDetailWidget::dealDelete()
 {
+    if(shelfCapacityLineEdit->text()!= "30")
+    {
+        QMessageBox::StandardButton info = QMessageBox::information(NULL, "Error", "该书架不为空，无法删除！");
+
+    }
+    else
+    {
+        QJsonObject getShelfsInfoPackage;
+        getShelfsInfoPackage.insert("type","delete shelf by shelfnumber");
+        getShelfsInfoPackage.insert("ShelfNumber",shelfNumberLineEdit->text());
+
+        tcpClient = this->tcpClient;
+        QByteArray byte_array = QJsonDocument(getShelfsInfoPackage).toJson();
+        tcpClient->write(byte_array);
+        if(tcpClient->waitForReadyRead(1000))//阻塞式连接
+        {
+            QByteArray result = tcpClient->readAll();
+            if(!result.isEmpty())
+            {
+                QJsonObject temp = QJsonDocument::fromJson(result).object();
+
+                if( temp.value("result").toString()== "succeed")
+                {
+
+                    QMessageBox::StandardButton info = QMessageBox::information(NULL, "OK", "删除成功");
+
+                    this->close();
+
+                }
+                else if(temp.value("result").toString()== "failed")
+                {
+                    QMessageBox::StandardButton info = QMessageBox::information(NULL, "Error", "删除失败");
+
+                }
+
+           }
+
+        }
+
+    }
+
+
 
 }
 
@@ -244,17 +281,8 @@ void BookShelfDetailWidget::getShelfInfo(int shelfNumber)
             QString ShelfType = temp.value("ShelfType").toString();
             int ShelfCapacity = temp.value("ShelfCapacity").toInt();
 
-//            QString theshelftype;
-//            QMap<QString, QString>::const_iterator i;
-//            for (i = shelfTypeMapping.constBegin(); i != shelfTypeMapping.constEnd(); ++i)
-//            {
-//                if(i.value() == ShelfType)
-//                {
-//                    theshelftype = i.key();
-//                }
-//            }
+
             shelfNumberLineEdit->setText(QString::number(ShelfNumber));
-//            shelfTypeComboBox->addItem(theshelftype);
             shelfTypeComboBox->addItem(ShelfType);
             shelfCapacityLineEdit->setText(QString::number(ShelfCapacity));
 

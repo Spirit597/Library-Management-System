@@ -321,6 +321,12 @@ void MainWindow::createViewLibraryInfoWin()
 
 void MainWindow::createViewShelfInfoWin()
 {
+    if(currentUserRole == "reader")
+    {
+        QMessageBox::information(NULL,"Error",QString("您不是管理员，无权限管理书架信息"),QMessageBox::Ok);
+        return;
+    }
+
     ShelfListWidget *shelfListInfoWin = new ShelfListWidget;
     shelfListInfoWin->setTcpClient(this->tcpClient);
     shelfListInfoWin->getShelfInfo();

@@ -414,6 +414,13 @@ void BookDetailWidget::dealBuyBook()
         QMessageBox::StandardButton info = QMessageBox::information(NULL, "Error", "价格的输入不能为空");
         return;
     }
+    else if(bookShelfLineEdit->text() == "")
+    {
+        QMessageBox::StandardButton info = QMessageBox::information(NULL, "Error", "书架编号的输入不能为空");
+        return;
+    }
+
+
 
     QJsonObject buyBookPackage;
 
@@ -425,6 +432,8 @@ void BookDetailWidget::dealBuyBook()
     buyBookPackage.insert("press", pressLineEdit->text());
     buyBookPackage.insert("publicationDate", publicationDateLineEdit->text());
     buyBookPackage.insert("price", priceLineEdit->text().toFloat());
+    buyBookPackage.insert("bookShelf", priceLineEdit->text().toInt());
+
 
     QByteArray byte_array = QJsonDocument(buyBookPackage).toJson();
     tcpClient->write(byte_array);
@@ -465,6 +474,8 @@ void BookDetailWidget::buyBookMode()
     pressLineEdit->setReadOnly(false);
     publicationDateLineEdit->setReadOnly(false);
     priceLineEdit->setReadOnly(false);
+    bookShelfLineEdit->setReadOnly(false);
+
 
     confirmBuyButton = new QPushButton("确定", this);
     confirmBuyButton->resize(80, 30);
@@ -523,44 +534,55 @@ void BookDetailWidget::showShelfList()
 
 void BookDetailWidget::showShelfListByType( QString shelfType)
 {
-    shelfTable->clearContents();
 
-    QJsonObject getShelfsInfoPackage;
-    getShelfsInfoPackage.insert("type","get shelfs information by shelfType");
-    QString mappingtype = shelfTypeMapping.find(shelfType).value();//映射关系转换："马克思主义、列宁主义、毛泽东思想、邓小平理论","A"
-    getShelfsInfoPackage.insert("shelftype",mappingtype);
-
-    tcpClient = this->tcpClient;
-    QByteArray byte_array = QJsonDocument(getShelfsInfoPackage).toJson();
-    tcpClient->write(byte_array);
-    if(tcpClient->waitForReadyRead(1000))//阻塞式连接
+    if( currentUserRole == "reader")
     {
-        QByteArray result = tcpClient->readAll();
-        if(!result.isEmpty())
+        shelfTable->hide();
+
+    }
+    else
+    {
+        shelfTable->clearContents();
+
+        QJsonObject getShelfsInfoPackage;
+        getShelfsInfoPackage.insert("type","get shelfs information by shelfType");
+        QString mappingtype = shelfTypeMapping.find(shelfType).value();//映射关系转换："马克思主义、列宁主义、毛泽东思想、邓小平理论","A"
+        getShelfsInfoPackage.insert("shelftype",mappingtype);
+
+        tcpClient = this->tcpClient;
+        QByteArray byte_array = QJsonDocument(getShelfsInfoPackage).toJson();
+        tcpClient->write(byte_array);
+        if(tcpClient->waitForReadyRead(1000))//阻塞式连接
         {
-            QJsonObject resultInfo = QJsonDocument::fromJson(result).object();
-            QStringList header;
-            shelfTable->setRowCount(resultInfo.count());
-            shelfTable->setColumnCount(3);
-            header<<"ShelfNumber"<<"ShelfType"<<"ShelfCapacity";//表头
-            shelfTable->setHorizontalHeaderLabels(header);
-            for(int i = 1; i <=resultInfo.count() ; i++)
+            QByteArray result = tcpClient->readAll();
+            if(!result.isEmpty())
             {
-                QJsonObject temp = resultInfo.value("shelfs" + QString::number(i)).toObject();
+                QJsonObject resultInfo = QJsonDocument::fromJson(result).object();
+                QStringList header;
+                shelfTable->setRowCount(resultInfo.count());
+                shelfTable->setColumnCount(3);
+                header<<"ShelfNumber"<<"ShelfType"<<"ShelfCapacity";//表头
+                shelfTable->setHorizontalHeaderLabels(header);
+                for(int i = 1; i <=resultInfo.count() ; i++)
+                {
+                    QJsonObject temp = resultInfo.value("shelfs" + QString::number(i)).toObject();
 
-                int ShelfNumber = temp.value("ShelfNumber").toInt();
-                QString ShelfType = temp.value("ShelfType").toString();
-                int ShelfCapacity = temp.value("ShelfCapacity").toInt();
+                    int ShelfNumber = temp.value("ShelfNumber").toInt();
+                    QString ShelfType = temp.value("ShelfType").toString();
+                    int ShelfCapacity = temp.value("ShelfCapacity").toInt();
 
-                shelfTable->setItem(i-1,0,new QTableWidgetItem(QString::number(ShelfNumber)));
-                shelfTable->setItem(i-1,1,new QTableWidgetItem(ShelfType));
-                shelfTable->setItem(i-1,2,new QTableWidgetItem(QString::number(ShelfCapacity)));
+                    shelfTable->setItem(i-1,0,new QTableWidgetItem(QString::number(ShelfNumber)));
+                    shelfTable->setItem(i-1,1,new QTableWidgetItem(ShelfType));
+                    shelfTable->setItem(i-1,2,new QTableWidgetItem(QString::number(ShelfCapacity)));
+
+                }
+                shelfTable->resizeRowsToContents();
+                shelfTable->show();
 
             }
-            shelfTable->resizeRowsToContents();
-            shelfTable->show();
 
         }
+
 
     }
 
