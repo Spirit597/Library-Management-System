@@ -17,15 +17,15 @@ BookShelfDetailWidget::BookShelfDetailWidget(QWidget *parent) : QWidget(parent)
     shelfNumberLineEdit->setReadOnly(true);
 
     shelfTypeComboBox = new QComboBox();
-    shelfTypeList<<"A"<<"B"<<"C"<<"D"<<"E"<<"F"<<"J";
+    shelfTypeList<<"A"<<"B"<<"C"<<"D"<<"I"<<"J"<<"K";
 
     shelfTypeMapping.insert("马克思主义、列宁主义、毛泽东思想、邓小平理论","A");
     shelfTypeMapping.insert("哲学、宗教","B");
     shelfTypeMapping.insert("社会科学总论","C");
     shelfTypeMapping.insert("政治、法律","D");
-    shelfTypeMapping.insert("文学","E");
-    shelfTypeMapping.insert("艺术","F");
-    shelfTypeMapping.insert("历史、地理","J");
+    shelfTypeMapping.insert("文学","I");
+    shelfTypeMapping.insert("艺术","J");
+    shelfTypeMapping.insert("历史、地理","K");
 
     shelfCapacityLineEdit = new QLineEdit();
     shelfCapacityLineEdit->setReadOnly(true);

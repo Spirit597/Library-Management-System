@@ -11,8 +11,6 @@ public:
     BookButton(QWidget *parent = 0);
 
     void setISBN(QString ISBN);
-    void loadCss();
-
 
     QString getISBN();
 

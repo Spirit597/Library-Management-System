@@ -30,9 +30,9 @@ ShelfListWidget::ShelfListWidget(QWidget *parent):QWidget(parent)
     shelfTypeMapping.insert("哲学、宗教","B");
     shelfTypeMapping.insert("社会科学总论","C");
     shelfTypeMapping.insert("政治、法律","D");
-    shelfTypeMapping.insert("文学","E");
-    shelfTypeMapping.insert("艺术","F");
-    shelfTypeMapping.insert("历史、地理","J");
+    shelfTypeMapping.insert("文学","I");
+    shelfTypeMapping.insert("艺术","J");
+    shelfTypeMapping.insert("历史、地理","K");
 
     shelfCapacityLineEdit = new QLineEdit();
     shelfCapacityLineEdit->setText("默认初始为30");

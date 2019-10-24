@@ -456,7 +456,7 @@ void MainWindow::getBooksInfo()
                 int bookShelf = temp.value("bookShelf").toInt();
 
                 oneBookButton->setISBN(ISBN);
-                oneBookButton->setText("ISBN：" + ISBN + "\n书名：" + name + "\n作者：" + writer + "\n类别：" + type + "\n出版社：" + press+'\n书架编号：'+bookShelf);
+                oneBookButton->setText("ISBN：" + ISBN + "\n书名：" + name + "\n作者：" + writer + "\n类别：" + type + "\n出版社：" + press);
                 oneBookButton->move(0, (i-1) * oneBookButton->height());
                 booksListWidget->resize(booksListWidget->width(), booksListWidget->height() + oneBookButton->height());
 

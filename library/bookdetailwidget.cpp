@@ -69,9 +69,9 @@ BookDetailWidget::BookDetailWidget(QWidget *parent) : QWidget(parent)
     shelfTypeMapping.insert("哲学、宗教","B");
     shelfTypeMapping.insert("社会科学总论","C");
     shelfTypeMapping.insert("政治、法律","D");
-    shelfTypeMapping.insert("文学","E");
-    shelfTypeMapping.insert("艺术","F");
-    shelfTypeMapping.insert("历史、地理","J");
+    shelfTypeMapping.insert("文学","I");
+    shelfTypeMapping.insert("艺术","J");
+    shelfTypeMapping.insert("历史、地理","K");
 
 
 
@@ -432,7 +432,7 @@ void BookDetailWidget::dealBuyBook()
     buyBookPackage.insert("press", pressLineEdit->text());
     buyBookPackage.insert("publicationDate", publicationDateLineEdit->text());
     buyBookPackage.insert("price", priceLineEdit->text().toFloat());
-    buyBookPackage.insert("bookShelf", priceLineEdit->text().toInt());
+    buyBookPackage.insert("bookShelf", bookShelfLineEdit->text().toInt());
 
 
     QByteArray byte_array = QJsonDocument(buyBookPackage).toJson();

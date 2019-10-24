@@ -27,9 +27,4 @@ void BookButton::sendSignal()
     emit ISBNsignal(this->ISBN);
 }
 
-void BookButton::loadCss()
-{
-    QFile qssFile(":/qss/silvery.css");
-    qssFile.open(QIODevice::ReadOnly);
-    this->setStyleSheet(qssFile.readAll());
-}
+
